@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Usuário</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+        }
+        
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .detail-section {
+            margin-bottom: 25px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+            line-height: 1.6;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            background: #28a745;
+            color: white;
+        }
+        
+        .tarefas-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+        
+        .tarefas-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .tarefa-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-left: 3px solid #667eea;
+            margin-bottom: 10px;
+            border-radius: 3px;
+        }
+        
+        .tarefa-titulo {
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 5px;
+        }
+        
+        .tarefa-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .status-pendente {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .status-em_progresso {
+            background: #0dcaf0;
+            color: white;
+        }
+        
+        .status-concluida {
+            background: #28a745;
+            color: white;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
+        .empty-tarefas {
+            color: #999;
+            font-style: italic;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{ usuario.nome }}</h1>
+        </header>
+        
+        <div class="content">
+            <div class="detail-section">
+                <div class="detail-label">Email</div>
+                <div class="detail-value">
+                    📧 {{ usuario.email }}
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-label">Status</div>
+                <div class="detail-value">
+                    <span class="status-badge">✓ Ativo</span>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-label">Membro desde</div>
+                <div class="detail-value">
+                    📅 {{ usuario.data_criacao|date:"d/m/Y H:i:s" }}
+                </div>
+            </div>
+            
+            {% if usuario.tarefas.all %}
+                <div class="tarefas-section">
+                    <h2>📋 Tarefas Atribuídas ({{ usuario.tarefas.count }})</h2>
+                    {% for tarefa in usuario.tarefas.all %}
+                        <div class="tarefa-item">
+                            <div class="tarefa-titulo">{{ tarefa.titulo }}</div>
+                            <span class="tarefa-status status-{{ tarefa.status }}">
+                                {{ tarefa.get_status_display }}
+                            </span>
+                            <a href="{% url 'detalhe_tarefa' tarefa.pk %}" style="color: #667eea; text-decoration: none;">
+                                Ver Tarefa →
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="tarefas-section">
+                    <h2>📋 Tarefas Atribuídas</h2>
+                    <div class="empty-tarefas">
+                        Nenhuma tarefa atribuída a este usuário.
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="actions">
+                <a href="{% url 'listar_usuarios' %}" class="btn btn-secondary">← Voltar</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

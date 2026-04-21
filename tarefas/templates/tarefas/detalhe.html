@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Tarefa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Fundo dark sólido e moderno */
+            background: radial-gradient(circle at center, #1e1e2e 0%, #111116 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        
+        header {
+            /* Gradiente mantendo a identidade, mas levemente mais escuro */
+            background: linear-gradient(135deg, #5061c5 0%, #5a397a 100%);
+            color: white;
+            padding: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .detail-section {
+            margin-bottom: 25px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            /* Cor de destaque neon/pastel para leitura no escuro */
+            color: #8f9eff;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .detail-value {
+            background: #252525;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            line-height: 1.6;
+            color: #d1d1d1;
+            border-top: 1px solid #333;
+            border-right: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+        
+        .status-badge, .prioridade-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-right: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Cores de Status adaptadas */
+        .status-pendente { background: #ffa000; color: #1a1a1a; }
+        .status-em_progresso { background: #0097a7; color: white; }
+        .status-concluida { background: #2e7d32; color: white; }
+        
+        /* Prioridades adaptadas */
+        .prioridade-1 { background: #1b5e20; color: #a5d6a7; }
+        .prioridade-2 { background: #e65100; color: #ffccbc; }
+        .prioridade-3 { background: #b71c1c; color: #ffcdd2; }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            filter: brightness(1.1);
+        }
+        
+        .btn-secondary {
+            background: #333;
+            color: #bbb;
+            border: 1px solid #444;
+        }
+        
+        .btn-secondary:hover {
+            background: #444;
+            color: #fff;
+        }
+        
+        .btn-danger {
+            background: #c62828;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #e53935;
+        }
+        
+        .btn-success {
+            background: #2e7d32;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #388e3c;
+        }
+        
+        /* Banner de conclusão Dark */
+        .concluida-info {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid #2e7d32;
+            color: #81c784;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{ tarefa.titulo }}</h1>
+        </header>
+        
+        <div class="content">
+            {% if tarefa.concluida %}
+                <div class="concluida-info">
+                    ✅ Esta tarefa foi marcada como concluída!
+                </div>
+            {% endif %}
+            
+            <div class="detail-section">
+                <div class="detail-label">Status</div>
+                <div class="detail-value">
+                    <span class="status-badge status-{{ tarefa.status }}">
+                        {{ tarefa.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            
+            {% if tarefa.usuario_responsavel %}
+                <div class="detail-section">
+                    <div class="detail-label">Responsável</div>
+                    <div class="detail-value">
+                        <a href="{% url 'detalhe_usuario' tarefa.usuario_responsavel.id %}" style="color: #667eea; text-decoration: none;">
+                            {{ tarefa.usuario_responsavel.nome }}
+                        </a> ({{ tarefa.usuario_responsavel.email }})
+                    </div>
+                </div>
+            {% else %}
+                <div class="detail-section">
+                    <div class="detail-label">Responsável</div>
+                    <div class="detail-value">
+                        Não atribuído
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="detail-section">
+                <div class="detail-label">Prioridade</div>
+                <div class="detail-value">
+                    <span class="prioridade-badge prioridade-{{ tarefa.prioridade }}">
+                        Nível {{ tarefa.prioridade }}
+                    </span>
+                </div>
+            </div>
+            
+            {% if tarefa.descricao %}
+                <div class="detail-section">
+                    <div class="detail-label">Descrição</div>
+                    <div class="detail-value">
+                        {{ tarefa.descricao }}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="detail-section">
+                <div class="detail-label">Criada em</div>
+                <div class="detail-value">
+                    {{ tarefa.data_criacao|date:"d/m/Y H:i:s" }}
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-label">Última atualização</div>
+                <div class="detail-value">
+                    {{ tarefa.data_atualizacao|date:"d/m/Y H:i:s" }}
+                </div>
+            </div>
+            
+            {% if tarefa.data_vencimento %}
+                <div class="detail-section">
+                    <div class="detail-label">Data de Vencimento</div>
+                    <div class="detail-value">
+                        ⏰ {{ tarefa.data_vencimento|date:"d/m/Y" }}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="actions">
+                <a href="{% url 'atualizar_tarefa' tarefa.pk %}" class="btn btn-primary">✏️ Editar</a>
+                {% if not tarefa.concluida %}
+                    <form method="post" action="{% url 'concluir_tarefa' tarefa.pk %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">✅ Marcar como Concluída</button>
+                    </form>
+                {% endif %}
+                <a href="{% url 'deletar_tarefa' tarefa.pk %}" class="btn btn-danger">🗑️ Deletar</a>
+                <a href="{% url 'listar_tarefas' %}" class="btn btn-secondary">↩️ Voltar</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

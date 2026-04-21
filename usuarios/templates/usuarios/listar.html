@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .usuarios-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .usuario-card {
+            background: #f9f9f9;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .usuario-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .usuario-info h3 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+        
+        .usuario-info p {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+        
+        .usuario-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: bold;
+            background: #28a745;
+            color: white;
+        }
+        
+        .usuario-acoes {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-info {
+            background: #0dcaf0;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #0bb5d8;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .empty-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Usuários do Sistema</h1>
+            <p>Gerenciadores de Tarefas</p>
+        </header>
+        
+        <div class="content">
+            <a href="{% url 'listar_tarefas' %}" class="nav-link">← Voltar para Tarefas</a>
+            
+            {% if usuarios %}
+                <div class="usuarios-list">
+                    {% for usuario in usuarios %}
+                        <div class="usuario-card">
+                            <div class="usuario-info">
+                                <h3>{{ usuario.nome }}</h3>
+                                <p>📧 {{ usuario.email }}</p>
+                                <p>📅 Membro desde: {{ usuario.data_criacao|date:"d/m/Y" }}</p>
+                                <span class="usuario-status">✓ Ativo</span>
+                            </div>
+                            <div class="usuario-acoes">
+                                <a href="{% url 'detalhe_usuario' usuario.id %}" class="btn btn-info">Ver Detalhes</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty">
+                    <div class="empty-icon"></div>
+                    <p>Nenhum usuário ativo encontrado.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

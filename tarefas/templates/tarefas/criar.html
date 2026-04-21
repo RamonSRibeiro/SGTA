@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Nova Tarefa</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Gradiente dark vibrante (Deep Purple/Navy) */
+        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #f0f0f0;
+    }
+    
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        /* Fundo semi-transparente para um efeito 'Glassmorphism' leve */
+        background: rgba(30, 30, 45, 0.95);
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    header {
+        /* Gradiente mais saturado para o topo */
+        background: linear-gradient(135deg, #434343 0%, #000000 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    header h1 {
+        font-size: 2em;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .content {
+        padding: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #a2a2c2; /* Tom lilás acinzentado */
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 12px;
+        background-color: #161625;
+        border: 1px solid #3d3d5c;
+        border-radius: 6px;
+        font-size: 1em;
+        font-family: inherit;
+        color: #ffffff;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Melhora a visibilidade do ícone de data no Chrome/Edge */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(0.8);
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    input[type="number"]:focus,
+    textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: #667eea;
+        background-color: #1c1c2e;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    }
+    
+    textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .btn {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        filter: brightness(1.1);
+    }
+    
+    .btn-secondary {
+        background: #2d2d3f;
+        color: #b0b0b0;
+        border: 1px solid #3d3d5c;
+    }
+    
+    .btn-secondary:hover {
+        background: #3d3d5c;
+        color: #fff;
+    }
+    
+    .help-text {
+        font-size: 0.85em;
+        color: #63638d;
+        margin-top: 5px;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Criar Nova Tarefa</h1>
+        </header>
+        
+        <div class="content">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="titulo">Título da Tarefa *</label>
+                    <input 
+                        type="text" 
+                        id="titulo" 
+                        name="titulo" 
+                        required 
+                        placeholder="Digite o título da tarefa"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="descricao">Descrição</label>
+                    <textarea 
+                        id="descricao" 
+                        name="descricao" 
+                        placeholder="Descreva a tarefa em detalhes (opcional)"
+                    ></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prioridade">Prioridade</label>
+                        <select id="prioridade" name="prioridade">
+                            <option value="1">1 - Baixa</option>
+                            <option value="2" selected>2 - Média</option>
+                            <option value="3">3 - Alta</option>
+                        </select>
+                        <p class="help-text">Selecione o nível de prioridade</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_vencimento">Data de Vencimento</label>
+                        <input 
+                            type="date" 
+                            id="data_vencimento" 
+                            name="data_vencimento"
+                        >
+                        <p class="help-text">Quando deve ser concluída?</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="usuario_responsavel">Responsável</label>
+                    <select id="usuario_responsavel" name="usuario_responsavel">
+                        <option value="">-- Selecione um usuário --</option>
+                        {% for usuario in usuarios %}
+                            <option value="{{ usuario.id }}">{{ usuario.nome }} ({{ usuario.email }})</option>
+                        {% endfor %}
+                    </select>
+                    <p class="help-text">Atribua a tarefa a um usuário</p>
+                </div>
+                
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">💾 Criar Tarefa</button>
+                    <a href="{% url 'listar_tarefas' %}" class="btn btn-secondary">❌ Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
